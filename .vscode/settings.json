@@ -1,5 +1,6 @@
 {
     "python.autoComplete.extraPaths": [
         "C:/Users/angad/OneDrive/Desktop/LangChain/Revit-LLM-assistant/revit_llm.extension/lib",
+        "C:/Users/angad/anaconda3/envs/revit_llm_env/stubs.min"
     ]
 }

@@ -10,7 +10,7 @@ from pyrevit import  DB
 
 uidoc = __revit__.ActiveUIDocument
 doc = __revit__.ActiveUIDocument.Document
-from snippets.selection import get_selected_elements, call_other_script, is_terrace, is_wall
+from snippets.selection import get_selected_elements, call_other_script, is_terrace, is_wall, are_walls_surrounding_floor, floor_area
 
 
 # from bs4 import BeautifulSoup 
@@ -22,21 +22,10 @@ if __name__ == '__main__':
     target_script = 'C:/Users/angad/OneDrive/Desktop/LangChain/Revit-LLM-assistant/qwerty.py'
     # print(call_other_script(target_environment_python, target_script, '6'))
 
-    # elements = get_selected_elements(uidoc)
-    # if is_wall(elements[0]):
-    #     print(elements[0].BoundingBox())
+    # print(are_walls_surrounding_floor(doc))
 
-    wall_list= FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType().ToElements()
-    wall_instance = wall_list[0]
-    options = Options()
-    print(wall_instance.Name)
-    print(wall_instance.get_Geometry(options))
-
-    # print(is_wall(get_selected_elements(uidoc)[0]))
-
-
-    # print(get_selected_elements(uidoc))
-
-    # x = [uidoc.Document.GetElement(x) for x in uidoc.Selection.GetReferences()]
-    # print(x[0].Name)
+    floor = get_selected_elements(uidoc)[0]
+    print(floor_area(floor))
+    # are_walls_surrounding_floor(doc)
+    
    

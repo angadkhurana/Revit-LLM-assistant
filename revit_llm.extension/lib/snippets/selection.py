@@ -15,11 +15,41 @@ def get_selected_elements(uidoc):
 
 
 def is_terrace(uidoc):
-    
-    # Get all the floors in the project
-    elements = get_selected_elements(uidoc)
-    el = elements[0]
-    return FilteredElementCollector(el).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsNotElementType().ToElements()
+    from pyrevit import revit, DB
+
+
+
+def floor_area(floor):
+    geom = floor.get_Geometry(Options()) # list of solids
+    # assuming number of solids=1
+    for solid in geom:
+        return max([face.Area for face in solid.Faces])
+
+
+def are_walls_surrounding_floor(doc):
+    # get all walls
+    walls = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType().ToElements()
+
+    # get all floors
+    floors = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsNotElementType().ToElements()
+
+    # iterate through each floor
+    for floor in floors:
+        floor_boundary = floor.get_Geometry(Options()).GetEdges()
+
+        # iterate through each wall
+        for wall in walls:
+            wall_loc_curve = wall.Location.Curve
+
+            # iterate through each boundary edge of the floor
+            for edge in floor_boundary:
+                if wall_loc_curve.Intersect(edge.AsCurve()):
+                    break
+            else:
+                return ('PyRevit', 'The floor with ID {} is not surrounded by walls.'.format(floor.Id))
+                break
+        else:
+            return ('PyRevit', 'The floor with ID {} is surrounded by walls.'.format(floor.Id))
 
 
 def is_wall(element):

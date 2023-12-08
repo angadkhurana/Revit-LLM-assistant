@@ -26,31 +26,6 @@ def floor_area(floor):
         return max([face.Area for face in solid.Faces])
 
 
-def are_walls_surrounding_floor(doc):
-    # get all walls
-    walls = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType().ToElements()
-
-    # get all floors
-    floors = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsNotElementType().ToElements()
-
-    # iterate through each floor
-    for floor in floors:
-        floor_boundary = floor.get_Geometry(Options()).GetEdges()
-
-        # iterate through each wall
-        for wall in walls:
-            wall_loc_curve = wall.Location.Curve
-
-            # iterate through each boundary edge of the floor
-            for edge in floor_boundary:
-                if wall_loc_curve.Intersect(edge.AsCurve()):
-                    break
-            else:
-                return ('PyRevit', 'The floor with ID {} is not surrounded by walls.'.format(floor.Id))
-                break
-        else:
-            return ('PyRevit', 'The floor with ID {} is surrounded by walls.'.format(floor.Id))
-
 
 def is_wall(element):
     # Check if the element is a wall

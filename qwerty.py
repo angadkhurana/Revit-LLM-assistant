@@ -15,7 +15,7 @@ llm = ChatOpenAI()
 # print(llm.predict("whats 5+5"))
 import sys
 
-q_string = "whats 5+ " + sys.argv[1]
+q_string = "Tell me about" + sys.argv[1]
 x = llm.predict(q_string)
 print(x)
 

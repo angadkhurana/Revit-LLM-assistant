@@ -11,21 +11,26 @@ from pyrevit import  DB
 uidoc = __revit__.ActiveUIDocument
 doc = __revit__.ActiveUIDocument.Document
 
+def get_all_walls(doc):
+    walls = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType().ToElements()
+    return walls
+
+def get_all_columns(doc):
+    columns = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Columns).WhereElementIsNotElementType().ToElements()
+    return columns
+
+def get_all_beams(doc):
+    structural_type_filter = DB.ElementStructuralTypeFilter(DB.Structure.StructuralType.Beam)
+    collector = DB.FilteredElementCollector(doc).WherePasses(structural_type_filter)
+    structural_beams = list(collector)
+    return structural_beams
+
 def get_selected_elements(uidoc):
     return [uidoc.Document.GetElement(x) for x in uidoc.Selection.GetElementIds()]
 
 
-def is_terrace(uidoc):
-    from pyrevit import revit, DB
-
-
-
-def floor_area(floor):
-    geom = floor.get_Geometry(Options()) # list of solids
-    # assuming number of solids=1
-    for solid in geom:
-        return max([face.Area for face in solid.Faces])
-
+def get_selected_elements_ids(uidoc):
+    return uidoc.Selection.GetElementIds()
 
 
 def is_wall(element):

@@ -16,14 +16,39 @@ def get_all_walls(doc):
     return walls
 
 def get_all_columns(doc):
-    columns = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Columns).WhereElementIsNotElementType().ToElements()
-    return columns
+    structural_type_filter = DB.ElementStructuralTypeFilter(DB.Structure.StructuralType.Column)
+    collector = DB.FilteredElementCollector(doc).WherePasses(structural_type_filter)
+    structural_columns = list(collector)
+    return structural_columns
 
 def get_all_beams(doc):
     structural_type_filter = DB.ElementStructuralTypeFilter(DB.Structure.StructuralType.Beam)
     collector = DB.FilteredElementCollector(doc).WherePasses(structural_type_filter)
     structural_beams = list(collector)
     return structural_beams
+
+def get_all_floors(doc):
+    floors = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsNotElementType().ToElements()
+    return floors
+
+def get_all_foundations(doc):
+    foundations = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StructuralFoundation).WhereElementIsNotElementType().ToElements()
+    return foundations
+
+def get_material_id_by_name(doc, mat_name):
+    mat_name = "Post-Tensioned Concrete Beams" # Replace with the actual material name
+
+    # Get all materials in the document
+    materials = FilteredElementCollector(doc).OfClass(Material).ToElements()
+
+    # Find the material with the given name
+    for mat in materials:
+        if mat.Name == mat_name:
+            mat_id = mat.Id
+            print(f"The ID of the material '{mat_name}' is: {mat_id}")
+            break
+    else:
+        print(f"Material with name '{mat_name}' not found in the current document.")
 
 def get_selected_elements(uidoc):
     return [uidoc.Document.GetElement(x) for x in uidoc.Selection.GetElementIds()]

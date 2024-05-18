@@ -32,11 +32,15 @@ if __name__ == '__main__':
     columns = get_all_columns(doc)
     print(columns)
 
-    column_filter = DB.ElementStructuralTypeFilter(DB.Structure.StructuralType.Wall)
-    collector = DB.FilteredElementCollector(doc).WherePasses(column_filter)
-    columns = list(collector)
-    print("walls2")
-    print(len(columns))
+    floors = get_all_floors(doc)
+    print("floors", floors)
+
+    foundations = get_all_foundations(doc)
+    print("foundations", foundations)
+
+
+
+    
 
 
 

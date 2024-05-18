@@ -37,6 +37,7 @@ if __name__ == '__main__':
     columns = list(collector)
     print("walls2")
     print(len(columns))
+    print("HUMMD")
 
 
 

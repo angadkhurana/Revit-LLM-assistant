@@ -35,20 +35,58 @@ def get_all_foundations(doc):
     foundations = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StructuralFoundation).WhereElementIsNotElementType().ToElements()
     return foundations
 
-def get_material_id_by_name(doc, mat_name):
-    mat_name = "Post-Tensioned Concrete Beams" # Replace with the actual material name
-
-    # Get all materials in the document
+def get_material_id_from_name(doc, mat_name):
     materials = FilteredElementCollector(doc).OfClass(Material).ToElements()
-
-    # Find the material with the given name
     for mat in materials:
         if mat.Name == mat_name:
-            mat_id = mat.Id
-            print(f"The ID of the material '{mat_name}' is: {mat_id}")
-            break
+            return mat.Id
     else:
-        print(f"Material with name '{mat_name}' not found in the current document.")
+        return None
+    
+def get_volume_of_material_in_component(doc, material, component):
+    mat_id = get_material_id_from_name(doc, material)
+
+    if component == 'beams':
+        beams = get_all_beams(doc)
+        volume = 0
+        for beam in beams:
+            volume += beam.GetMaterialVolume(mat_id)
+        return volume
+    
+    elif component == 'columns':
+        columns = get_all_columns(doc)
+        volume = 0
+        for column in columns:
+            volume += column.GetMaterialVolume(mat_id)
+        return volume
+    
+    elif component == 'floors':
+        floors = get_all_floors(doc)
+        volume = 0
+        for floor in floors:
+            volume += floor.GetMaterialVolume(mat_id)
+        return volume
+    
+    elif component == 'foundations':
+        foundations = get_all_foundations(doc)
+        volume = 0
+        for foundation in foundations:
+            volume += foundation.GetMaterialVolume(mat_id)
+        return volume
+
+    elif component == 'walls':
+        walls = get_all_walls(doc)
+        volume = 0
+        for wall in walls:
+            volume += wall.GetMaterialVolume(mat_id)
+        return volume
+    
+    else:
+        return None
+
+    
+    
+    
 
 def get_selected_elements(uidoc):
     return [uidoc.Document.GetElement(x) for x in uidoc.Selection.GetElementIds()]

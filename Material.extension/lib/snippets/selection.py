@@ -43,49 +43,51 @@ def get_material_id_from_name(doc, mat_name):
     else:
         return None
     
+def convert_to_cubic_meters(volume, unit_type):
+    if unit_type == DisplayUnitType.DUT_CUBIC_METERS:
+        return volume
+    elif unit_type == DisplayUnitType.DUT_CUBIC_FEET:
+        return volume * 0.0283168  # cubic feet to cubic meters
+    elif unit_type == DisplayUnitType.DUT_CUBIC_INCHES:
+        return volume * 1.63871e-5  # cubic inches to cubic meters
+    else:
+        raise ValueError(f"Unsupported unit type: {unit_type}")
+
+# Function to get the volume unit of a material
+def get_volume_unit(element):
+    for param in element.Parameters:
+        if param.Definition.ParameterType == ParameterType.Volume:
+            return param.DisplayUnitType
+    return None
+
 def get_volume_of_material_in_component(doc, material, component):
     mat_id = get_material_id_from_name(doc, material)
 
     if component == 'beams':
-        beams = get_all_beams(doc)
-        volume = 0
-        for beam in beams:
-            volume += beam.GetMaterialVolume(mat_id)
-        return volume
-    
+        elements = get_all_beams(doc)
     elif component == 'columns':
-        columns = get_all_columns(doc)
-        volume = 0
-        for column in columns:
-            volume += column.GetMaterialVolume(mat_id)
-        return volume
-    
+        elements = get_all_columns(doc)
     elif component == 'floors':
-        floors = get_all_floors(doc)
-        volume = 0
-        for floor in floors:
-            volume += floor.GetMaterialVolume(mat_id)
-        return volume
-    
+        elements = get_all_floors(doc)
     elif component == 'foundations':
-        foundations = get_all_foundations(doc)
-        volume = 0
-        for foundation in foundations:
-            volume += foundation.GetMaterialVolume(mat_id)
-        return volume
-
+        elements = get_all_foundations(doc)
     elif component == 'walls':
-        walls = get_all_walls(doc)
-        volume = 0
-        for wall in walls:
-            volume += wall.GetMaterialVolume(mat_id)
-        return volume
-    
+        elements = get_all_walls(doc)
     else:
         return None
 
-    
-    
+    total_volume = 0
+    for elem in elements:
+        volume = elem.GetMaterialVolume(mat_id)
+        unit_type = get_volume_unit(elem)
+        if unit_type is not None:
+            volume_in_cubic_meters = convert_to_cubic_meters(volume, unit_type)
+            total_volume += volume_in_cubic_meters
+        else:
+            print(f"Warning: Could not determine volume unit for element ID {elem.Id}")
+
+    return total_volume
+
     
 
 def get_selected_elements(uidoc):

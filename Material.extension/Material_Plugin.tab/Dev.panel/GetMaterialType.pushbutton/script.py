@@ -19,9 +19,9 @@ import subprocess
 
 if __name__ == '__main__':
 
-    # target_environment_python = 'C:/Users/angad/anaconda3/envs/revit_llm_env/python.exe'
-    # target_script = 'C:/Users/angad/OneDrive/Desktop/LangChain/Revit-LLM-assistant/qwerty.py'
-    # print(call_other_script(target_environment_python, target_script, 'London'))
+    target_environment_python = 'C:/Users/angad/anaconda3/envs/revit_llm_env/python.exe'
+    target_script = 'C:/Users/angad/OneDrive/Desktop/LangChain/Revit-LLM-assistant/target_script.py'
+    print(call_other_script(target_environment_python, target_script, 'London'))
 
     material_list = ["WAL_Concrete_RC"]
 

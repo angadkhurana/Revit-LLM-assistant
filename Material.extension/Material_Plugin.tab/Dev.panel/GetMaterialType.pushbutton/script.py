@@ -8,6 +8,8 @@ from Autodesk.Revit.DB import *
 
 import subprocess
 from pyrevit import  DB
+import xlwings as xw
+import json
 
 uidoc = __revit__.ActiveUIDocument
 doc = __revit__.ActiveUIDocument.Document
@@ -19,11 +21,9 @@ import subprocess
 
 if __name__ == '__main__':
 
-    # target_environment_python = 'C:/Users/angad/anaconda3/envs/revit_llm_env/python.exe'
-    # target_script = 'C:/Users/angad/OneDrive/Desktop/LangChain/Revit-LLM-assistant/target_script.py'
-    # print(call_other_script(target_environment_python, target_script, 'London'))
-
-    material_list = ["WAL_Concrete_RF"]
+    
+    mat_name = 'WAL_Concrete_RC'
+    material_list = [mat_name]
 
     volume_of_materials_in_beams = {material:get_volume_of_material_in_component(doc, material, "beams") for material in material_list}
     volume_of_materials_in_columns = {material:get_volume_of_material_in_component(doc, material, "columns") for material in material_list}
@@ -38,6 +38,19 @@ if __name__ == '__main__':
     print(volume_of_materials_in_floors)
     print(volume_of_materials_in_foundations)
     print(volume_of_materials_in_walls)
+
+
+    print("Test Phase")
+    input_dict = {'beams':volume_of_materials_in_beams[mat_name],'columns':volume_of_materials_in_columns[mat_name],'floors':volume_of_materials_in_floors[mat_name],'foundations':volume_of_materials_in_foundations[mat_name],'walls':volume_of_materials_in_walls[mat_name]}                                                                
+    target_environment_python = 'C:/Users/angad/anaconda3/envs/revit_llm_env/python.exe'
+    target_script = 'C:/Users/angad/OneDrive/Desktop/LangChain/Revit-LLM-assistant/target_script.py'
+    print(json.dumps(input_dict))
+    print(call_other_script(target_environment_python, target_script, input_dict))
+    
+
+    
+
+
 
 
 

@@ -16,9 +16,7 @@ def get_all_walls(doc):
     return walls
 
 def get_all_columns(doc):
-    structural_type_filter = DB.ElementStructuralTypeFilter(DB.Structure.StructuralType.Column)
-    collector = DB.FilteredElementCollector(doc).WherePasses(structural_type_filter)
-    structural_columns = list(collector)
+    structural_columns =FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StructuralColumns).WhereElementIsNotElementType().ToElements()
     return structural_columns
 
 def get_all_beams(doc):
@@ -104,17 +102,19 @@ def is_wall(element):
 
 
 
-# def call_other_script(target_environment_python, target_script, input):
-#     # Build the command to run the script in the target environmentr
-#     command = [target_environment_python, target_script,input]
+import json
+import subprocess
 
-#     # Use subprocess to run the command
-#     try:
-#         result = subprocess.run(command, capture_output=True, check=True)
-#         return "Command Output: " + str(result.stdout)
+def call_other_script(target_environment_python, target_script, input_dict):
+    # Serialize the dictionary to JSON string
+    input_json = json.dumps(input_dict)
 
+    # Build the command to run the script in the target environment
+    command = [target_environment_python, target_script, input_json]
 
-#         # # Print the return code
-#         # print("Return Code:", result.returncode)
-#     except subprocess.CalledProcessError as e:
-#         return f"Error: {e}"##
+    try:
+        # Use subprocess to run the command
+        result = subprocess.run(command, capture_output=True, check=True)
+        return result.stdout.decode('utf-8')
+    except subprocess.CalledProcessError as e:
+        return f"Error: {e}"

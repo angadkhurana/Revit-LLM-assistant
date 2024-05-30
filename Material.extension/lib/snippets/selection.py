@@ -49,35 +49,35 @@ def get_volume_of_material_in_component(doc, material, component):
         volume = 0
         for beam in beams:
             volume += beam.GetMaterialVolume(mat_id)
-        return volume
+        return volume*0.0283168 #convert to cubic metres
     
     elif component == 'columns':
         columns = get_all_columns(doc)
         volume = 0
         for column in columns:
             volume += column.GetMaterialVolume(mat_id)
-        return volume
+        return volume*0.0283168 #convert to cubic metres
     
     elif component == 'floors':
         floors = get_all_floors(doc)
         volume = 0
         for floor in floors:
             volume += floor.GetMaterialVolume(mat_id)
-        return volume
+        return volume*0.0283168 #convert to cubic metres
     
     elif component == 'foundations':
         foundations = get_all_foundations(doc)
         volume = 0
         for foundation in foundations:
             volume += foundation.GetMaterialVolume(mat_id)
-        return volume
+        return volume*0.0283168 #convert to cubic metres
 
     elif component == 'walls':
         walls = get_all_walls(doc)
         volume = 0
         for wall in walls:
             volume += wall.GetMaterialVolume(mat_id)
-        return volume
+        return volume*0.0283168 #convert to cubic metres
     
     else:
         return None
